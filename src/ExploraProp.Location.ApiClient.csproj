@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ExploraProp.Location.ApiClient</RootNamespace>
+    <AssemblyName>ExploraProp.Location.ApiClient</AssemblyName>
+    <PackageId>ExploraProp.Location.ApiClient</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>ExploraProp</Authors>
+    <Company>ExploraProp</Company>
+    <Description>Kiota-generated OpenAPI client for the Location BC (wire contract; no Application DTOs).</Description>
+    <RepositoryUrl>https://github.com/ExploraProp/csharp_location_sdk</RepositoryUrl>
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Kiota.Bundle" Version="1.20.1" />
+  </ItemGroup>
+
+</Project>

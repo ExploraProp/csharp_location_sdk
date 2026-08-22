@@ -1,0 +1,116 @@
+name: OpenAPI spec updated
+
+on:
+  repository_dispatch:
+    types: [openapi-spec-updated]
+  workflow_dispatch:
+    inputs:
+      spec_path:
+        description: 'Path in ExploraProp/OpenAPI-contracts (e. of apis/location/openapi.…Z.json). Empty = newest.'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  CONTRACTS_REPO: ExploraProp/OpenAPI-contracts
+  BC: location
+  PACKAGE_ID: ExploraProp.Location.ApiClient
+
+jobs:
+  regenerate-and-publish:
+    name: Regenerate Kiota client + NuGet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout SDK
+        uses: actions/checkout@v4
+
+      - name: Resolve spec path
+        id: spec
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_TOKEN }}
+          DISPATCH_PATH: ${{ github.event.client_payload.spec_path }}
+          INPUT_PATH: ${{ inputs.spec_path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          path="${DISPATCH_PATH:-}"
+          if [[ -z "$path" ]]; then
+            path="${INPUT_PATH:-}"
+          fi
+          if [[ -z "$path" ]]; then
+            # Newest timestamped file under apis/location/
+            path="$(gh api "repos/${CONTRACTS_REPO}/contents/apis/${BC}" --jq '
+              [.[] | select(.name | test("^openapi\\.[0-9]{14}Z\\.json$"))]
+              | max_by(.name)
+              | .path
+            ')"
+          fi
+          if [[ -z "$path" || "$path" == "null" ]]; then
+            echo "No OpenAPI snapshot found for ${BC}" >&2
+            exit 1
+          fi
+          echo "path=$path" >> "$GITHUB_OUTPUT"
+          # Version: 0.0.0-openapi.<timestamp> from filename openapi.<ts>Z.json
+          base="$(basename "$path")"
+          ts="${base#openapi.}"
+          ts="${ts%.json}"
+          echo "package_version=0.0.0-openapi.${ts}" >> "$GITHUB_OUTPUT"
+          echo "Using $path → version 0.0.0-openapi.${ts}"
+
+      - name: Fetch OpenAPI spec from contracts
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_TOKEN }}
+          SPEC_PATH: ${{ steps.spec.outputs.path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p openapi
+          gh api "repos/${CONTRACTS_REPO}/contents/${SPEC_PATH}" --jq .content \
+            | base64 --decode > openapi/openapi.v1.json
+          test -s openapi/openapi.v1.json
+          echo "Wrote openapi/openapi.v1.json ($(wc -c < openapi/openapi.v1.json) bytes)"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+          source-url: https://nuget.pkg.github.com/ExploraProp/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restore Kiota tool
+        run: dotnet tool restore
+
+      - name: Generate client
+        run: pwsh -File generate.ps1 -SpecPath openapi/openapi.v1.json
+
+      - name: Pack
+        run: |
+          dotnet pack src/ExploraProp.Location.ApiClient.csproj \
+            -c Release \
+            -p:PackageVersion=${{ steps.spec.outputs.package_version }} \
+            -o artifacts
+
+      - name: Push NuGet (GitHub Packages)
+        run: |
+          dotnet nuget push artifacts/*.nupkg \
+            --source https://nuget.pkg.github.com/ExploraProp/index.json \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
+            --skip-duplicate
+
+      - name: Commit regenerated sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add openapi/openapi.v1.json src/Generated generate.ps1 || true
+          if git diff --cached --quiet; then
+            echo "No source changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: regenerate Location client from ${{ steps.spec.outputs.path }}"
+          git push

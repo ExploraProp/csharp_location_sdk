@@ -1,0 +1,14 @@
+# Build
+**/bin/
+**/obj/
+*.user
+*.suo
+.vs/
+
+# Spec scratch / local
+*.nupkg
+artifacts/
+
+# OS
+.DS_Store
+Thumbs.db
