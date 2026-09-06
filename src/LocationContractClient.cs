@@ -62,8 +62,8 @@ public sealed class LocationContractClient(HttpClient httpClient)
             config.QueryParameters.LevelId = levelId;
             config.QueryParameters.SortBy = sortBy;
             config.QueryParameters.SortDirection = sortDirection;
-            if (pageNumber is not null) config.QueryParameters.PageNumber = pageNumber.Value.ToString();
-            if (pageSize is not null) config.QueryParameters.PageSize = pageSize.Value.ToString();
+            config.QueryParameters.PageNumber = pageNumber;
+            config.QueryParameters.PageSize = pageSize;
             config.QueryParameters.Cursor = cursor;
         }, cancellationToken));
 
