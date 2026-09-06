@@ -50,11 +50,7 @@
             "name": "PageNumber",
             "in": "query",
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
+              "type": "integer",
               "format": "int32"
             }
           },
@@ -62,11 +58,7 @@
             "name": "PageSize",
             "in": "query",
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
+              "type": "integer",
               "format": "int32"
             }
           },
@@ -899,11 +891,9 @@
             ]
           },
           "sortOrder": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
               "null",
-              "integer",
-              "string"
+              "integer"
             ],
             "format": "int32"
           },
@@ -921,7 +911,8 @@
       "CountryDto": {
         "required": [
           "isoCode",
-          "i18nCode"
+          "i18nCode",
+          "label"
         ],
         "type": "object",
         "properties": {
@@ -929,6 +920,9 @@
             "type": "string"
           },
           "i18nCode": {
+            "type": "string"
+          },
+          "label": {
             "type": "string"
           }
         }
@@ -971,35 +965,21 @@
             }
           },
           "pageSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "int32"
           },
           "totalCount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "int32"
           },
           "totalPages": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "int32"
           },
           "currentPage": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
               "null",
-              "integer",
-              "string"
+              "integer"
             ],
             "format": "int32"
           },
@@ -1022,20 +1002,16 @@
             ]
           },
           "nextPage": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
               "null",
-              "integer",
-              "string"
+              "integer"
             ],
             "format": "int32"
           },
           "previousPage": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
               "null",
-              "integer",
-              "string"
+              "integer"
             ],
             "format": "int32"
           }
@@ -1057,11 +1033,9 @@
             ]
           },
           "status": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
               "null",
-              "integer",
-              "string"
+              "integer"
             ],
             "format": "int32"
           },
@@ -1076,8 +1050,60 @@
               "null",
               "string"
             ]
+          },
+          "code": {
+            "type": "string",
+            "description": "Stable primary error identity (ResultProblemDetails / InmoExceptionHandler)."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "Stable error code (e.g. Email.TooLong)."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Localized short title for the field error."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Localized detail for the field error."
+                },
+                "target": {
+                  "type": "string",
+                  "description": "Field or member the error applies to."
+                }
+              },
+              "description": "Per-field validation error from ResultProblemDetails (HTTP 422)."
+            },
+            "description": "Field-level validation errors when status is 422."
           }
         }
+      },
+      "ProblemDetailsError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Stable error code (e.g. Email.TooLong)."
+          },
+          "title": {
+            "type": "string",
+            "description": "Localized short title for the field error."
+          },
+          "description": {
+            "type": "string",
+            "description": "Localized detail for the field error."
+          },
+          "target": {
+            "type": "string",
+            "description": "Field or member the error applies to."
+          }
+        },
+        "description": "Per-field validation error from ResultProblemDetails (HTTP 422)."
       },
       "SearchAdministrativeDivisionsByNameResultDto": {
         "required": [

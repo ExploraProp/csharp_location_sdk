@@ -7,53 +7,62 @@ using System.IO;
 using System;
 namespace ExploraProp.Location.ApiClient.Models
 {
+    /// <summary>
+    /// Per-field validation error from ResultProblemDetails (HTTP 422).
+    /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-    #pragma warning disable CS1591
-    public partial class CountryDto : IAdditionalDataHolder, IParsable
-    #pragma warning restore CS1591
+    public partial class ProblemDetails_errors : IAdditionalDataHolder, IParsable
     {
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
-        /// <summary>The i18nCode property</summary>
+        /// <summary>Stable error code (e.g. Email.TooLong).</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? I18nCode { get; set; }
+        public string? Code { get; set; }
 #nullable restore
 #else
-        public string I18nCode { get; set; }
+        public string Code { get; set; }
 #endif
-        /// <summary>The isoCode property</summary>
+        /// <summary>Localized detail for the field error.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? IsoCode { get; set; }
+        public string? Description { get; set; }
 #nullable restore
 #else
-        public string IsoCode { get; set; }
+        public string Description { get; set; }
 #endif
-        /// <summary>The label property</summary>
+        /// <summary>Field or member the error applies to.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Label { get; set; }
+        public string? Target { get; set; }
 #nullable restore
 #else
-        public string Label { get; set; }
+        public string Target { get; set; }
+#endif
+        /// <summary>Localized short title for the field error.</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Title { get; set; }
+#nullable restore
+#else
+        public string Title { get; set; }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="global::ExploraProp.Location.ApiClient.Models.CountryDto"/> and sets the default values.
+        /// Instantiates a new <see cref="global::ExploraProp.Location.ApiClient.Models.ProblemDetails_errors"/> and sets the default values.
         /// </summary>
-        public CountryDto()
+        public ProblemDetails_errors()
         {
             AdditionalData = new Dictionary<string, object>();
         }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::ExploraProp.Location.ApiClient.Models.CountryDto"/></returns>
+        /// <returns>A <see cref="global::ExploraProp.Location.ApiClient.Models.ProblemDetails_errors"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::ExploraProp.Location.ApiClient.Models.CountryDto CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::ExploraProp.Location.ApiClient.Models.ProblemDetails_errors CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
-            return new global::ExploraProp.Location.ApiClient.Models.CountryDto();
+            return new global::ExploraProp.Location.ApiClient.Models.ProblemDetails_errors();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -63,9 +72,10 @@ namespace ExploraProp.Location.ApiClient.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "i18nCode", n => { I18nCode = n.GetStringValue(); } },
-                { "isoCode", n => { IsoCode = n.GetStringValue(); } },
-                { "label", n => { Label = n.GetStringValue(); } },
+                { "code", n => { Code = n.GetStringValue(); } },
+                { "description", n => { Description = n.GetStringValue(); } },
+                { "target", n => { Target = n.GetStringValue(); } },
+                { "title", n => { Title = n.GetStringValue(); } },
             };
         }
         /// <summary>
@@ -75,9 +85,10 @@ namespace ExploraProp.Location.ApiClient.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteStringValue("i18nCode", I18nCode);
-            writer.WriteStringValue("isoCode", IsoCode);
-            writer.WriteStringValue("label", Label);
+            writer.WriteStringValue("code", Code);
+            writer.WriteStringValue("description", Description);
+            writer.WriteStringValue("target", Target);
+            writer.WriteStringValue("title", Title);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

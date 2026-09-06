@@ -15,13 +15,7 @@ namespace ExploraProp.Location.ApiClient.Models
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
         /// <summary>The currentPage property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public UntypedNode? CurrentPage { get; set; }
-#nullable restore
-#else
-        public UntypedNode CurrentPage { get; set; }
-#endif
+        public int? CurrentPage { get; set; }
         /// <summary>The hasNextPage property</summary>
         public bool? HasNextPage { get; set; }
         /// <summary>The hasPreviousPage property</summary>
@@ -43,21 +37,9 @@ namespace ExploraProp.Location.ApiClient.Models
         public string NextCursor { get; set; }
 #endif
         /// <summary>The nextPage property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public UntypedNode? NextPage { get; set; }
-#nullable restore
-#else
-        public UntypedNode NextPage { get; set; }
-#endif
+        public int? NextPage { get; set; }
         /// <summary>The pageSize property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public UntypedNode? PageSize { get; set; }
-#nullable restore
-#else
-        public UntypedNode PageSize { get; set; }
-#endif
+        public int? PageSize { get; set; }
         /// <summary>The previousCursor property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -67,29 +49,11 @@ namespace ExploraProp.Location.ApiClient.Models
         public string PreviousCursor { get; set; }
 #endif
         /// <summary>The previousPage property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public UntypedNode? PreviousPage { get; set; }
-#nullable restore
-#else
-        public UntypedNode PreviousPage { get; set; }
-#endif
+        public int? PreviousPage { get; set; }
         /// <summary>The totalCount property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public UntypedNode? TotalCount { get; set; }
-#nullable restore
-#else
-        public UntypedNode TotalCount { get; set; }
-#endif
+        public int? TotalCount { get; set; }
         /// <summary>The totalPages property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public UntypedNode? TotalPages { get; set; }
-#nullable restore
-#else
-        public UntypedNode TotalPages { get; set; }
-#endif
+        public int? TotalPages { get; set; }
         /// <summary>
         /// Instantiates a new <see cref="global::ExploraProp.Location.ApiClient.Models.PaginatedResultOfAdministrativeDivisionDto"/> and sets the default values.
         /// </summary>
@@ -115,17 +79,17 @@ namespace ExploraProp.Location.ApiClient.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "currentPage", n => { CurrentPage = n.GetObjectValue<UntypedNode>(UntypedNode.CreateFromDiscriminatorValue); } },
+                { "currentPage", n => { CurrentPage = n.GetIntValue(); } },
                 { "hasNextPage", n => { HasNextPage = n.GetBoolValue(); } },
                 { "hasPreviousPage", n => { HasPreviousPage = n.GetBoolValue(); } },
                 { "items", n => { Items = n.GetCollectionOfObjectValues<global::ExploraProp.Location.ApiClient.Models.AdministrativeDivisionDto>(global::ExploraProp.Location.ApiClient.Models.AdministrativeDivisionDto.CreateFromDiscriminatorValue)?.AsList(); } },
                 { "nextCursor", n => { NextCursor = n.GetStringValue(); } },
-                { "nextPage", n => { NextPage = n.GetObjectValue<UntypedNode>(UntypedNode.CreateFromDiscriminatorValue); } },
-                { "pageSize", n => { PageSize = n.GetObjectValue<UntypedNode>(UntypedNode.CreateFromDiscriminatorValue); } },
+                { "nextPage", n => { NextPage = n.GetIntValue(); } },
+                { "pageSize", n => { PageSize = n.GetIntValue(); } },
                 { "previousCursor", n => { PreviousCursor = n.GetStringValue(); } },
-                { "previousPage", n => { PreviousPage = n.GetObjectValue<UntypedNode>(UntypedNode.CreateFromDiscriminatorValue); } },
-                { "totalCount", n => { TotalCount = n.GetObjectValue<UntypedNode>(UntypedNode.CreateFromDiscriminatorValue); } },
-                { "totalPages", n => { TotalPages = n.GetObjectValue<UntypedNode>(UntypedNode.CreateFromDiscriminatorValue); } },
+                { "previousPage", n => { PreviousPage = n.GetIntValue(); } },
+                { "totalCount", n => { TotalCount = n.GetIntValue(); } },
+                { "totalPages", n => { TotalPages = n.GetIntValue(); } },
             };
         }
         /// <summary>
@@ -135,17 +99,17 @@ namespace ExploraProp.Location.ApiClient.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<UntypedNode>("currentPage", CurrentPage);
+            writer.WriteIntValue("currentPage", CurrentPage);
             writer.WriteBoolValue("hasNextPage", HasNextPage);
             writer.WriteBoolValue("hasPreviousPage", HasPreviousPage);
             writer.WriteCollectionOfObjectValues<global::ExploraProp.Location.ApiClient.Models.AdministrativeDivisionDto>("items", Items);
             writer.WriteStringValue("nextCursor", NextCursor);
-            writer.WriteObjectValue<UntypedNode>("nextPage", NextPage);
-            writer.WriteObjectValue<UntypedNode>("pageSize", PageSize);
+            writer.WriteIntValue("nextPage", NextPage);
+            writer.WriteIntValue("pageSize", PageSize);
             writer.WriteStringValue("previousCursor", PreviousCursor);
-            writer.WriteObjectValue<UntypedNode>("previousPage", PreviousPage);
-            writer.WriteObjectValue<UntypedNode>("totalCount", TotalCount);
-            writer.WriteObjectValue<UntypedNode>("totalPages", TotalPages);
+            writer.WriteIntValue("previousPage", PreviousPage);
+            writer.WriteIntValue("totalCount", TotalCount);
+            writer.WriteIntValue("totalPages", TotalPages);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

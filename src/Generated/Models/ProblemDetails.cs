@@ -15,6 +15,14 @@ namespace ExploraProp.Location.ApiClient.Models
     {
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
+        /// <summary>Stable primary error identity (ResultProblemDetails / InmoExceptionHandler).</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Code { get; set; }
+#nullable restore
+#else
+        public string Code { get; set; }
+#endif
         /// <summary>The detail property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -22,6 +30,14 @@ namespace ExploraProp.Location.ApiClient.Models
 #nullable restore
 #else
         public string Detail { get; set; }
+#endif
+        /// <summary>Field-level validation errors when status is 422.</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public List<global::ExploraProp.Location.ApiClient.Models.ProblemDetails_errors>? Errors { get; set; }
+#nullable restore
+#else
+        public List<global::ExploraProp.Location.ApiClient.Models.ProblemDetails_errors> Errors { get; set; }
 #endif
         /// <summary>The instance property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -34,13 +50,7 @@ namespace ExploraProp.Location.ApiClient.Models
         /// <summary>The primary error message.</summary>
         public override string Message { get => base.Message; }
         /// <summary>The status property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public UntypedNode? Status { get; set; }
-#nullable restore
-#else
-        public UntypedNode Status { get; set; }
-#endif
+        public int? Status { get; set; }
         /// <summary>The title property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -82,9 +92,11 @@ namespace ExploraProp.Location.ApiClient.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
+                { "code", n => { Code = n.GetStringValue(); } },
                 { "detail", n => { Detail = n.GetStringValue(); } },
+                { "errors", n => { Errors = n.GetCollectionOfObjectValues<global::ExploraProp.Location.ApiClient.Models.ProblemDetails_errors>(global::ExploraProp.Location.ApiClient.Models.ProblemDetails_errors.CreateFromDiscriminatorValue)?.AsList(); } },
                 { "instance", n => { Instance = n.GetStringValue(); } },
-                { "status", n => { Status = n.GetObjectValue<UntypedNode>(UntypedNode.CreateFromDiscriminatorValue); } },
+                { "status", n => { Status = n.GetIntValue(); } },
                 { "title", n => { Title = n.GetStringValue(); } },
                 { "type", n => { Type = n.GetStringValue(); } },
             };
@@ -96,9 +108,11 @@ namespace ExploraProp.Location.ApiClient.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
+            writer.WriteStringValue("code", Code);
             writer.WriteStringValue("detail", Detail);
+            writer.WriteCollectionOfObjectValues<global::ExploraProp.Location.ApiClient.Models.ProblemDetails_errors>("errors", Errors);
             writer.WriteStringValue("instance", Instance);
-            writer.WriteObjectValue<UntypedNode>("status", Status);
+            writer.WriteIntValue("status", Status);
             writer.WriteStringValue("title", Title);
             writer.WriteStringValue("type", Type);
             writer.WriteAdditionalData(AdditionalData);

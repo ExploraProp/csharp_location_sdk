@@ -141,20 +141,8 @@ namespace ExploraProp.Location.ApiClient.Api.V1.AdministrativeDivisions
 #else
             public string LevelId { get; set; }
 #endif
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-            public string? PageNumber { get; set; }
-#nullable restore
-#else
-            public string PageNumber { get; set; }
-#endif
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-            public string? PageSize { get; set; }
-#nullable restore
-#else
-            public string PageSize { get; set; }
-#endif
+            public int? PageNumber { get; set; }
+            public int? PageSize { get; set; }
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
             public string? ParentId { get; set; }

@@ -55,13 +55,7 @@ namespace ExploraProp.Location.ApiClient.Models
         public string Name { get; set; }
 #endif
         /// <summary>The sortOrder property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public UntypedNode? SortOrder { get; set; }
-#nullable restore
-#else
-        public UntypedNode SortOrder { get; set; }
-#endif
+        public int? SortOrder { get; set; }
         /// <summary>The updatedAt property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -100,7 +94,7 @@ namespace ExploraProp.Location.ApiClient.Models
                 { "createdAt", n => { CreatedAt = n.GetStringValue(); } },
                 { "id", n => { Id = n.GetStringValue(); } },
                 { "name", n => { Name = n.GetStringValue(); } },
-                { "sortOrder", n => { SortOrder = n.GetObjectValue<UntypedNode>(UntypedNode.CreateFromDiscriminatorValue); } },
+                { "sortOrder", n => { SortOrder = n.GetIntValue(); } },
                 { "updatedAt", n => { UpdatedAt = n.GetStringValue(); } },
             };
         }
@@ -116,7 +110,7 @@ namespace ExploraProp.Location.ApiClient.Models
             writer.WriteStringValue("createdAt", CreatedAt);
             writer.WriteStringValue("id", Id);
             writer.WriteStringValue("name", Name);
-            writer.WriteObjectValue<UntypedNode>("sortOrder", SortOrder);
+            writer.WriteIntValue("sortOrder", SortOrder);
             writer.WriteStringValue("updatedAt", UpdatedAt);
             writer.WriteAdditionalData(AdditionalData);
         }
