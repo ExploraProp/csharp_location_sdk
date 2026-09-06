@@ -73,17 +73,19 @@ jobs:
           test -s openapi/openapi.v1.json
           echo "Wrote openapi/openapi.v1.json ($(wc -c < openapi/openapi.v1.json) bytes)"
 
+      # GITHUB_TOKEN cannot read org packages published from other repos (e.g. API.Scripts).
+      # Use NUGET_AUTH_TOKEN (PAT with read:packages) for restore; GITHUB_TOKEN for push.
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
           source-url: https://nuget.pkg.github.com/ExploraProp/index.json
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
 
       - name: Restore tools
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
         run: |
           set -euo pipefail
           dotnet nuget update source github-exploraprop --username github --password "$NUGET_AUTH_TOKEN" --store-password-in-clear-text \
