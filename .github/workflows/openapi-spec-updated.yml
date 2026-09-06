@@ -53,12 +53,15 @@ jobs:
             exit 1
           fi
           echo "path=$path" >> "$GITHUB_OUTPUT"
-          # Version: YYYY.MM.DD.HH.MM from filename openapi.<ts>.json
+          # Filename openapi.YYYY.MM.DD.HH.MM.json → NuGet 4-part YYYY.M.D.HHMM
+          # (5-part versions are invalid and fail restore with silent MSB4181)
           base="$(basename "$path")"
           ts="${base#openapi.}"
           ts="${ts%.json}"
-          echo "package_version=${ts}" >> "$GITHUB_OUTPUT"
-          echo "Using $path → version ${ts}"
+          IFS=. read -r y m d h min <<< "$ts"
+          package_version="${y}.$((10#$m)).$((10#$d)).$((10#$h * 100 + 10#$min))"
+          echo "package_version=${package_version}" >> "$GITHUB_OUTPUT"
+          echo "Using $path → version ${package_version}"
 
       - name: Fetch OpenAPI spec from contracts
         env:
