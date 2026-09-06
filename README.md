@@ -6,14 +6,18 @@ Kiota-generated C# client for the **Location** OpenAPI contract.
 |------|--------|
 | Package | `ExploraProp.Location.ApiClient` |
 | Repo | [`ExploraProp/csharp_location_sdk`](https://github.com/ExploraProp/csharp_location_sdk) |
-| Contracts | `ExploraProp/OpenAPI-contracts` → newest `apis/location/openapi.<yyyyMMddHHmmss>Z.json` |
+| Contracts | `ExploraProp/OpenAPI-contracts` → newest `apis/location/openapi.<YYYY.MM.DD.HH.MM>.json` |
 | Notify | `openapi-spec-updated` (`spec_path` in payload) |
+| Generate | **API.Scripts** only (`generate-client`) — no `generate.ps1` |
 
 ## Local regenerate
 
+Requires `API.Scripts` + `microsoft.openapi.kiota` from [`.config/dotnet-tools.json`](.config/dotnet-tools.json) (GitHub Packages auth for ExploraProp).
+
 ```powershell
-./generate.ps1 -SpecPath openapi/openapi.v1.json
-dotnet pack src/ExploraProp.Location.ApiClient.csproj -c Release
+dotnet tool restore
+dotnet tool run api-scripts -- generate-client --spec openapi/openapi.v1.json --bc location --out src/Generated
+dotnet pack src/ExploraProp.Location.ApiClient.csproj -c Release -p:PackageVersion=2026.09.02.14.03
 ```
 
 ## CI
@@ -21,15 +25,19 @@ dotnet pack src/ExploraProp.Location.ApiClient.csproj -c Release
 [`.github/workflows/openapi-spec-updated.yml`](.github/workflows/openapi-spec-updated.yml) on `repository_dispatch`:
 
 1. Fetch spec from contracts (`CROSS_REPO_TOKEN`)
-2. Kiota generate
-3. Pack as `0.0.0-openapi.<timestamp>Z`
+2. `api-scripts generate-client --spec … --bc location`
+3. Pack as `YYYY.MM.DD.HH.MM` (e.g. `2026.09.02.14.03`)
 4. Push to GitHub Packages (`ExploraProp`)
-5. Commit regenerated sources
+5. Commit regenerated sources (`openapi/`, `src/Generated`)
 
-## Consumers (functional tests)
+## Consumers
+
+External apps use NuGet:
 
 ```xml
-<PackageReference Include="ExploraProp.Location.ApiClient" Version="0.0.0-openapi.*" />
+<PackageReference Include="ExploraProp.Location.ApiClient" Version="2026.*" />
 ```
 
-Map the package in `NuGet.Config` to `https://nuget.pkg.github.com/ExploraProp/index.json`. Prefer a pinned prerelease version in lockfiles.
+Map the package in `NuGet.Config` to `https://nuget.pkg.github.com/ExploraProp/index.json`. Prefer pinning the exact resolved version in lockfiles.
+
+**location-api functional tests** use an ephemeral `ProjectReference` to `clients/ExploraProp.Location.ApiClient` generated via `api-scripts generate-client --service Location` (not this package).
