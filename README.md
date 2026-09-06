@@ -17,7 +17,7 @@ Requires `API.Scripts` + `microsoft.openapi.kiota` from [`.config/dotnet-tools.j
 ```powershell
 dotnet tool restore
 dotnet tool run api-scripts -- generate-client --spec openapi/openapi.v1.json --bc location --out src/Generated
-dotnet pack src/ExploraProp.Location.ApiClient.csproj -c Release -p:PackageVersion=2026.09.02.14.03
+dotnet pack src/ExploraProp.Location.ApiClient.csproj -c Release -p:PackageVersion=2026.9.2.1403
 ```
 
 ## CI
@@ -26,7 +26,7 @@ dotnet pack src/ExploraProp.Location.ApiClient.csproj -c Release -p:PackageVersi
 
 1. Fetch spec from contracts (`CROSS_REPO_TOKEN`)
 2. `api-scripts generate-client --spec … --bc location`
-3. Pack as `YYYY.MM.DD.HH.MM` (e.g. `2026.09.02.14.03`)
+3. Pack as NuGet 4-part `YYYY.M.D.HHMM` from snapshot `openapi.YYYY.MM.DD.HH.MM.json` (e.g. `2026.9.2.1403`)
 4. Push to GitHub Packages (`ExploraProp`)
 5. Commit regenerated sources (`openapi/`, `src/Generated`)
 
