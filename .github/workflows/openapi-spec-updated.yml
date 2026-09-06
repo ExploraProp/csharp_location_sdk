@@ -1,4 +1,4 @@
-name: OpenAPI spec updated
+name: 📄 OpenAPI spec updated
 
 on:
   repository_dispatch:
@@ -21,13 +21,13 @@ env:
 
 jobs:
   regenerate-and-publish:
-    name: Regenerate Kiota client + NuGet
+    name: 👽 Regenerate Kiota client + NuGet
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout SDK
+      - name: ⬇️ Checkout SDK
         uses: actions/checkout@v4
 
-      - name: Resolve spec path
+      - name: 🔎 Resolve spec path
         id: spec
         env:
           GH_TOKEN: ${{ secrets.CROSS_REPO_TOKEN }}
@@ -63,7 +63,7 @@ jobs:
           echo "package_version=${package_version}" >> "$GITHUB_OUTPUT"
           echo "Using $path → version ${package_version}"
 
-      - name: Fetch OpenAPI spec from contracts
+      - name: 📥 Fetch OpenAPI spec from contracts
         env:
           GH_TOKEN: ${{ secrets.CROSS_REPO_TOKEN }}
           SPEC_PATH: ${{ steps.spec.outputs.path }}
@@ -78,7 +78,7 @@ jobs:
 
       # GITHUB_TOKEN cannot read org packages published from other repos (e.g. API.Scripts).
       # Use NUGET_AUTH_TOKEN (PAT with read:packages) for restore; GITHUB_TOKEN for push.
-      - name: Setup .NET
+      - name: ⚙️ Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
@@ -86,7 +86,7 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
 
-      - name: Restore tools
+      - name: 📦 Restore tools
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
         run: |
@@ -96,28 +96,28 @@ jobs:
                  --name github-exploraprop --username github --password "$NUGET_AUTH_TOKEN" --store-password-in-clear-text
           dotnet tool restore
 
-      - name: Generate client
+      - name: 🧬 Generate client
         run: >
           dotnet tool run api-scripts -- generate-client
           --spec openapi/openapi.v1.json
           --bc location
           --out src/Generated
 
-      - name: Pack
+      - name: 📦 Pack
         run: |
           dotnet pack src/ExploraProp.Location.ApiClient.csproj \
             -c Release \
             -p:PackageVersion=${{ steps.spec.outputs.package_version }} \
             -o artifacts
 
-      - name: Push NuGet (GitHub Packages)
+      - name: 🚀 Push NuGet (GitHub Packages)
         run: |
           dotnet nuget push artifacts/*.nupkg \
             --source https://nuget.pkg.github.com/ExploraProp/index.json \
             --api-key ${{ secrets.GITHUB_TOKEN }} \
             --skip-duplicate
 
-      - name: Commit regenerated sources
+      - name: 💾 Commit regenerated sources
         shell: bash
         run: |
           set -euo pipefail
@@ -128,5 +128,5 @@ jobs:
             echo "No source changes to commit."
             exit 0
           fi
-          git commit -m "chore: regenerate Location client from ${{ steps.spec.outputs.path }}"
+          git commit -m "👽 regenerate Location client from ${{ steps.spec.outputs.path }}"
           git push
