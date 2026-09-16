@@ -8,6 +8,7 @@
 # Spec scratch / local
 *.nupkg
 artifacts/
+git_commits.ps1
 
 # OS
 .DS_Store
